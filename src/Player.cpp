@@ -18,5 +18,18 @@ void Player::handleUserInput() {
 
 void Player::updatePosition() {
     position = Vector2Add(position, Vector2Scale(velocity, GetFrameTime()));
-    velocity = Vector2Add(velocity, { 0.0, gravity * GetFrameTime() });
+    if (!onGround) {
+        velocity = Vector2Add(velocity, { 0.0, gravity * GetFrameTime() });
+    }
+}
+
+void Player::checkPlatformLanding(Platform platform) {
+    if ((position.y + height) + velocity.y * GetFrameTime() > platform.rectangle.y) {
+        position.y = platform.rectangle.y - height;
+        onGround = true;
+    }
+}
+
+Rectangle Player::getPlayerRectangle() {
+    return Rectangle { position.x, position.y, width, height };
 }

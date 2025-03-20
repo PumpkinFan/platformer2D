@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "raylib.h"
 #include "raymath.h"
 #include "globals.h"
@@ -12,9 +13,18 @@
 //----------------------------------------------------------------------------------
 // Global Game State
 //----------------------------------------------------------------------------------
+
+std::vector<Platform> createPlatforms() {
+    std::vector<Platform> platforms;
+    Platform platform = { Rectangle { 100, 400, 700, 100 } };
+    platforms.push_back(platform);
+    return platforms;
+}
+
 struct GameState {
     Player player;
     Camera2D camera;
+    std::vector<Platform> platforms;
 };
 
 GameState game;
@@ -34,10 +44,13 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "platformer2D");
 
     // Initialize the camera
+    game.camera.target = Vector2 { game.player.position.x + 100, 
+                                   game.player.position.y + 100 };
     game.camera.offset = Vector2 { screenWidth / 2, screenHeight / 2 };
     game.camera.rotation = 0.0f;
     game.camera.zoom = 1.0f;
 
+    game.platforms = createPlatforms();
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
@@ -65,21 +78,26 @@ int main(void)
 //----------------------------------------------------------------------------------
 void UpdateDrawFrame(void)
 {
-    std::cout << game.player.velocity.x << std::endl;
     // Update
     //----------------------------------------------------------------------------------
+    for (Platform platform : game.platforms) {
+        game.player.checkPlatformLanding(platform);
+    }
     game.player.handleUserInput();
     game.player.updatePosition();
 
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
-
-
-
+    
         ClearBackground(RAYWHITE);
-        game.player.draw();
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        
+        BeginMode2D(game.camera);
+            for (Platform platform : game.platforms) {
+                platform.draw();
+            }
+            game.player.draw();
+        EndMode2D();
 
     EndDrawing();
     //----------------------------------------------------------------------------------
