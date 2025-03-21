@@ -7,6 +7,6 @@
 const int screenWidth = 800;
 const int screenHeight = 450;
 
-const float gravity = 10.0;
+const float gravity = 100.0;
 
 #endif
