@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 void Player::draw() {
     DrawRectangleV(position, { width, height }, RED);
@@ -6,15 +7,26 @@ void Player::draw() {
 
 void Player::handleUserInput() {
     // keyboard movement input
-    if (IsKeyDown(KEY_A)) {
-        velocity = Vector2Add(velocity, { -1.0, 0.0 });
+    if (abs(velocity.x) < maxHorizontalSpeed) {
+        if (IsKeyDown(KEY_A)) {
+            velocity = Vector2Add(velocity, { -horizontalAcceleration * GetFrameTime(), 0.0 });
+        }
+        if (IsKeyDown(KEY_D)) {
+            velocity = Vector2Add(velocity, { horizontalAcceleration * GetFrameTime(), 0.0 });
+        }
     }
-    if (IsKeyDown(KEY_D)) {
-        velocity = Vector2Add(velocity, { 1.0, 0.0 });
+    if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
+        if (velocity.x > 0) {
+            velocity.x -= horizontalFriction * GetFrameTime();
+        }
+        if (velocity.x < 0) {
+            velocity.x += horizontalFriction * GetFrameTime();
+        }
     }
     if (IsKeyDown(KEY_SPACE)) {
+        // Jumping
         if (onPlatform != nullptr) {
-            velocity = Vector2Add(velocity, { 0.0, -100.0 });
+            velocity = Vector2Add(velocity, { 0.0, -200.0 });
             onPlatform = nullptr;
         }
     }
@@ -23,19 +35,24 @@ void Player::handleUserInput() {
 void Player::updatePosition() {
     position = Vector2Add(position, Vector2Scale(velocity, GetFrameTime()));
     if (onPlatform == nullptr) {
-        velocity = Vector2Add(velocity, { 0.0, gravity * GetFrameTime() });
+        if (velocity.y < 0) {  // player moving upwards
+            velocity = Vector2Add(velocity, { 0.0, gravity * upwardGravityMultiplier * GetFrameTime() });
+        }
+        else {
+            velocity = Vector2Add(velocity, { 0.0, gravity * GetFrameTime() });
+        }
     }
 }
 
-void Player::checkPlatformLanding(Platform platform) {
+void Player::checkPlatformLanding(Platform *platform) {
     // check horizontal alignment with platform
-    if ((position.x + width > platform.rectangle.x) && (position.x < platform.rectangle.x + platform.rectangle.width)) {
+    if ((position.x + width > platform->rectangle.x) && (position.x < platform->rectangle.x + platform->rectangle.width)) {
         // check if player will fall into platform and not below platform
-        if ((position.y + height + velocity.y * GetFrameTime() > platform.rectangle.y) &&
-            (position.y < platform.rectangle.y + platform.rectangle.height)) {
-            position.y = platform.rectangle.y - height;
+        if ((position.y + height + velocity.y * GetFrameTime() > platform->rectangle.y) &&
+            (position.y + height < platform->rectangle.y)) {
+            position.y = platform->rectangle.y - height;
             velocity.y = 0;
-            onPlatform = &platform;
+            onPlatform = platform;
         }
     }
 }

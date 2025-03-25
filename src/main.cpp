@@ -18,8 +18,10 @@ std::vector<Platform> createPlatforms() {
     std::vector<Platform> platforms;
     Platform platform1 = { Rectangle { 150, 400, 500, 50 } };
     Platform platform2 = { Rectangle { 300, 300, 100, 10 } };
+    Platform platform3 = { Rectangle { 375, 350, 100, 10 } };
     platforms.push_back(platform1);
     platforms.push_back(platform2);
+    platforms.push_back(platform3);
     return platforms;
 }
 
@@ -80,12 +82,16 @@ int main(void)
 //----------------------------------------------------------------------------------
 void UpdateDrawFrame(void)
 {
-    std::cout << (game.player.onPlatform == nullptr) << std::endl;
+    std::cout << (game.player.velocity.x / game.player.maxHorizontalSpeed) << std::endl;
     // Update
     //----------------------------------------------------------------------------------
     if (game.player.onPlatform == nullptr) {  // player is not on any platform
-        for (Platform platform : game.platforms) {
-            game.player.checkPlatformLanding(platform);
+        for (Platform& platform : game.platforms) {
+            game.player.checkPlatformLanding(&platform);
+            if (game.player.onPlatform != nullptr) {
+                // if the player falls on a platform stop looping
+                break;
+            }
         }
     }
     else {
