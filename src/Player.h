@@ -22,6 +22,8 @@ struct Player {
     // pointer to platfrom that the player is on
     // if null the player is "in air"
     Platform *onPlatform = nullptr;
+    Platform *touchingWallLeft = nullptr;
+    Platform *touchingWallRight = nullptr;
     // could be used for collision detection
     Rectangle getPlayerRectangle();
 
@@ -30,6 +32,10 @@ struct Player {
     void updatePosition();
     void checkPlatformLanding(Platform *platform);
     void checkWalkOffPlatform();
+    void checkCollidingWallLeft(Platform *platform);
+    void checkCollidingWallRight(Platform *platform);
+    void checkSlidingOffWallLeft();
+    void checkSlidingOffWallRight();
 };
 
 

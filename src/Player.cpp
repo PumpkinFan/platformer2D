@@ -6,13 +6,16 @@ void Player::draw() {
 }
 
 void Player::handleUserInput() {
-    // keyboard movement input
-    if (abs(velocity.x) < maxHorizontalSpeed) {
-        if (IsKeyDown(KEY_A)) {
-            velocity = Vector2Add(velocity, { -horizontalAcceleration * GetFrameTime(), 0.0 });
+    if (IsKeyDown(KEY_A) && velocity.x > -maxHorizontalSpeed && !touchingWallLeft) {
+        velocity = Vector2Add(velocity, { -horizontalAcceleration * GetFrameTime(), 0.0 });
+        if (touchingWallRight) {
+            touchingWallRight = nullptr;
         }
-        if (IsKeyDown(KEY_D)) {
-            velocity = Vector2Add(velocity, { horizontalAcceleration * GetFrameTime(), 0.0 });
+    }
+    if (IsKeyDown(KEY_D) && velocity.x < maxHorizontalSpeed && !touchingWallRight) {
+        velocity = Vector2Add(velocity, { horizontalAcceleration * GetFrameTime(), 0.0 });
+        if (touchingWallLeft) {
+            touchingWallLeft = nullptr;
         }
     }
     if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
@@ -21,6 +24,10 @@ void Player::handleUserInput() {
         }
         if (velocity.x < 0) {
             velocity.x += horizontalFriction * GetFrameTime();
+        }
+        // after reducing the speed if we are near zero just set vx to zero
+        if (abs(velocity.x) < 1) {
+            velocity.x = 0;
         }
     }
     if (IsKeyDown(KEY_SPACE)) {
@@ -54,6 +61,44 @@ void Player::checkPlatformLanding(Platform *platform) {
             velocity.y = 0;
             onPlatform = platform;
         }
+    }
+}
+
+void Player::checkCollidingWallLeft(Platform *platform) {
+    // check vertical alignment with platform
+    if ((position.y + height > platform->rectangle.y) && (position.y < platform->rectangle.y + platform->rectangle.height)) {
+        // check moving into right-edge of platform 
+        if ((position.x + velocity.x * GetFrameTime() < platform->rectangle.x + platform->rectangle.width) && 
+            (position.x >= platform->rectangle.x + platform->rectangle.width)) {
+            position.x = platform->rectangle.x + platform->rectangle.width;
+            velocity.x = 0;
+            touchingWallLeft = platform;
+        }
+    }
+}
+
+void Player::checkCollidingWallRight(Platform *platform) {
+    // check vertical alignment with platform
+    if ((position.y + height > platform->rectangle.y) && (position.y < platform->rectangle.y + platform->rectangle.height)) {
+        // check moving into left-edge of platform or at the left-edge
+        if ((position.x + velocity.x * GetFrameTime() + width > platform->rectangle.x) && 
+            (position.x + width <= platform->rectangle.x)) {
+            position.x = platform->rectangle.x - width;
+            velocity.x = 0;
+            touchingWallRight = platform;
+        }
+    }
+}
+
+void Player::checkSlidingOffWallLeft() {
+    if (!(position.y + height > touchingWallLeft->rectangle.y && position.y < touchingWallLeft->rectangle.y + touchingWallLeft->rectangle.height)) {
+        touchingWallLeft = nullptr;
+    }
+}
+
+void Player::checkSlidingOffWallRight() {
+    if (!(position.y + height > touchingWallRight->rectangle.y && position.y < touchingWallRight->rectangle.y + touchingWallRight->rectangle.height)) {
+        touchingWallRight = nullptr;
     }
 }
 

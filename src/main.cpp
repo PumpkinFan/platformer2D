@@ -19,9 +19,11 @@ std::vector<Platform> createPlatforms() {
     Platform platform1 = { Rectangle { 150, 400, 500, 50 } };
     Platform platform2 = { Rectangle { 300, 300, 100, 10 } };
     Platform platform3 = { Rectangle { 375, 350, 100, 10 } };
+    Platform verticalPlatform = { Rectangle { 100, 100, 50, 300 } };
     platforms.push_back(platform1);
     platforms.push_back(platform2);
     platforms.push_back(platform3);
+    platforms.push_back(verticalPlatform);
     return platforms;
 }
 
@@ -82,20 +84,33 @@ int main(void)
 //----------------------------------------------------------------------------------
 void UpdateDrawFrame(void)
 {
-    std::cout << (game.player.velocity.x / game.player.maxHorizontalSpeed) << std::endl;
+    std::cout << (game.player.touchingWallLeft || game.player.touchingWallRight) << std::endl;
     // Update
     //----------------------------------------------------------------------------------
-    if (game.player.onPlatform == nullptr) {  // player is not on any platform
-        for (Platform& platform : game.platforms) {
-            game.player.checkPlatformLanding(&platform);
-            if (game.player.onPlatform != nullptr) {
-                // if the player falls on a platform stop looping
-                break;
-            }
+    // game.player.touchingWall = false;
+    for (Platform& platform : game.platforms) {
+        if (game.player.touchingWallLeft == nullptr) {
+            game.player.checkCollidingWallLeft(&platform);
         }
-    }
-    else {
-        game.player.checkWalkOffPlatform();
+        else {
+            game.player.checkSlidingOffWallLeft();
+        }
+        if (game.player.touchingWallRight == nullptr) {
+            game.player.checkCollidingWallRight(&platform);
+        }
+        else {
+            game.player.checkSlidingOffWallRight();
+        }
+        if (game.player.onPlatform == nullptr) {  // player is not on any platform
+            game.player.checkPlatformLanding(&platform);
+            // if (game.player.onPlatform != nullptr) {
+            //     // if the player falls on a platform stop looping
+            //     break;
+            // }
+        }
+        else {
+            game.player.checkWalkOffPlatform();
+        }
     }
     game.player.handleUserInput();
     game.player.updatePosition();
