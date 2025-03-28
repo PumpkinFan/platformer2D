@@ -30,11 +30,22 @@ void Player::handleUserInput() {
             velocity.x = 0;
         }
     }
-    if (IsKeyDown(KEY_SPACE)) {
+    if (IsKeyPressed(KEY_SPACE)) {
         // Jumping
-        if (onPlatform != nullptr) {
+        if (onPlatform) {
             velocity = Vector2Add(velocity, { 0.0, -200.0 });
             onPlatform = nullptr;
+        }
+        else {
+            // Wall jumping
+            if (touchingWallLeft) {
+                velocity = Vector2Add(velocity, { 100, -200 });
+                touchingWallLeft = nullptr;
+            }
+            if (touchingWallRight) {
+                velocity = Vector2Add(velocity, { -100, -200 });
+                touchingWallRight = nullptr;
+            }
         }
     }
 }

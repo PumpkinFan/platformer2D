@@ -12,9 +12,9 @@ struct Player {
     float width = 10.0;
     float height = 10.0;
     
-    float horizontalAcceleration = 100.0;
-    float horizontalFriction = 100.0;
-    float maxHorizontalSpeed = 100.0;
+    float horizontalAcceleration = 200.0;
+    float horizontalFriction = 200.0;
+    float maxHorizontalSpeed = 200.0;
 
     // increase player gravity when moving upward 
     float upwardGravityMultiplier = 2.0f;
