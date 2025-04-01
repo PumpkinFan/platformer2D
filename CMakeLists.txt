@@ -5,29 +5,42 @@ include(FetchContent)
 
 # Dependencies 
 set(RAYLIB_VERSION 5.5)
+set(RAYGUI_VERSION 4.0)
 
+# Fetch Raylib
 FetchContent_Declare(
     raylib
     DOWNLOAD_EXTRACT_TIMESTAMP OFF
     URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
     FIND_PACKAGE_ARGS
 )
-
 FetchContent_MakeAvailable(raylib)
 
+# Fetch Raygui
+FetchContent_Declare(
+    raygui
+    GIT_REPOSITORY https://github.com/raysan5/raygui.git
+    GIT_TAG ${RAYGUI_VERSION}
+)
+FetchContent_MakeAvailable(raygui)
+
+# Add executable
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
 
+# Include raygui header
+target_include_directories(${PROJECT_NAME} PRIVATE ${raygui_SOURCE_DIR}/src)
+
+# Link raylib
 target_link_libraries(${PROJECT_NAME} raylib)
 
-# # Web Configurations
+# Web Configurations
 if ("${PLATFORM}" STREQUAL "Web")
-    # Tell Emscripten to build an example.html file.
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
     target_link_options(${PROJECT_NAME} PUBLIC -sUSE_GLFW=3)
 endif()
 
-# Checks if OSX and links appropriate frameworks (Only required on MacOS)
+# MacOS Framework Linking
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework IOKit")
     target_link_libraries(${PROJECT_NAME} "-framework Cocoa")

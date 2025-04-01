@@ -19,14 +19,15 @@ void Player::handleUserInput() {
         }
     }
     if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
+        float frictionModifier = (!onPlatform ? 0.5f : 1.0f);
         if (velocity.x > 0) {
-            velocity.x -= horizontalFriction * GetFrameTime();
+            velocity.x -= horizontalFriction * frictionModifier * GetFrameTime();
         }
         if (velocity.x < 0) {
-            velocity.x += horizontalFriction * GetFrameTime();
+            velocity.x += horizontalFriction * frictionModifier * GetFrameTime();
         }
         // after reducing the speed if we are near zero just set vx to zero
-        if (abs(velocity.x) < 1) {
+        if (abs(velocity.x) <= 2) {
             velocity.x = 0;
         }
     }
@@ -39,11 +40,11 @@ void Player::handleUserInput() {
         else {
             // Wall jumping
             if (touchingWallLeft) {
-                velocity = Vector2Add(velocity, { 100, -200 });
+                velocity = Vector2Add(velocity, { 100, -300 });
                 touchingWallLeft = nullptr;
             }
             if (touchingWallRight) {
-                velocity = Vector2Add(velocity, { -100, -200 });
+                velocity = Vector2Add(velocity, { -100, -300 });
                 touchingWallRight = nullptr;
             }
         }
