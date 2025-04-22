@@ -3,8 +3,7 @@
 
 #include "raylib.h"
 #include "raymath.h"
-#define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
+
 
 #include "globals.h"
 #include "Player.h"
@@ -14,6 +13,13 @@
 #if defined(PLATFORM_WEB)
     #include <emscripten/emscripten.h>
 #endif
+
+// TODO
+// Fix any clicks on editor GUI while in editor mode
+// Add system to save and load level setups
+// Add more debugging info (play params, platform params, etc.)
+// New editor features (specify exact values, align platforms, ...)
+
 
 //----------------------------------------------------------------------------------
 // Global Game State
@@ -39,6 +45,12 @@ struct GameState {
     Player player;
     Camera2D camera;
     Editor editor;
+    bool editorActive = false;
+    void checkEditorToggle() {
+        if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_Q)) {
+            editorActive = !editorActive;
+        }
+    }
     std::vector<Platform> platforms;
     void addNewPlatform(Platform newPlatform) {
         platforms.push_back(newPlatform);
@@ -97,6 +109,7 @@ int main(void)
 //----------------------------------------------------------------------------------
 void UpdateDrawFrame(void)
 {
+    std::cout << game.editor.selectedPlatform << std::endl;
     // Update
     //----------------------------------------------------------------------------------
     if (!game.player.touchingWallLeft) {
@@ -127,12 +140,25 @@ void UpdateDrawFrame(void)
     game.player.handleUserInput();
     game.player.updatePosition();
 
-    game.editor.handleUserInput();
-    if (game.editor.finishedDrawingPlatform) {
-        game.addNewPlatform(game.editor.createDrawnPlatform());
-        game.editor.finishedDrawingPlatform = false;
-    } 
-    // std::cout << game.platforms.size() << std::endl;
+    game.checkEditorToggle();
+
+    // Check user input and update state of editor 
+    if (game.editorActive) {
+        game.editor.handleUserInput();
+        if (game.editor.finishedDrawingPlatform) {
+            game.addNewPlatform(game.editor.createDrawnPlatform());
+            game.editor.finishedDrawingPlatform = false;
+        } 
+        if (game.editor.searchingForSelectedPlatform) {
+            for (Platform& platform : game.platforms) {
+                if (CheckCollisionPointRec(GetMousePosition(), platform.rectangle)) {
+                    game.editor.selectedPlatform = &platform;
+                    game.editor.searchingForSelectedPlatform = false;
+                    break;
+                }
+            }
+        }
+    }
 
     // Draw
     //----------------------------------------------------------------------------------
@@ -146,14 +172,7 @@ void UpdateDrawFrame(void)
             }
             game.player.draw();
 
-            if (game.editor.isActive) {
-                // std::cout << game.editor.mode << std::endl;
-                if (GuiButton((Rectangle){ 30, 30, 30, 30 }, "#33#")) {
-                    if (game.editor.mode != DRAW_PLATFORM) {
-                        game.editor.mode = DRAW_PLATFORM;
-                    }
-                };
-
+            if (game.editorActive) {
                 game.editor.draw();
             }
 
