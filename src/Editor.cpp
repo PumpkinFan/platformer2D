@@ -2,9 +2,54 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
+void EditorButton::draw() {
+    if (GuiButton(bounds, text)) {
+        onClick();
+    }
+}
+
+std::vector<EditorButton> Editor::generateButtons() {
+    std::vector<EditorButton> buttons = {};
+    
+    EditorButton drawPlatformButton = {
+        {buttonsStart.x, buttonsStart.y, buttonSize, buttonSize},
+        "#33#",
+        [this]() { 
+            if (mode != DRAW_PLATFORM) {
+                setMode(DRAW_PLATFORM);
+            } 
+        },
+
+    };
+    buttons.push_back(drawPlatformButton);
+
+    EditorButton selectPlatformButton = {
+        {buttonsStart.x + buttonSize + buttonPadding, buttonsStart.y, buttonSize, buttonSize},
+        "#67#",
+        [this]() {
+            if (mode != SELECT_PLATFORM) {
+                setMode(SELECT_PLATFORM);
+            }
+        }
+    };
+    buttons.push_back(selectPlatformButton);
+
+    return buttons;
+}
+
+void Editor::checkActiveToggle() {
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_Q)) {
+        isActive = !isActive;
+    }
+}
+
 void Editor::setMode(EditorMode newMode) {
     if (newMode == DRAW_PLATFORM) { 
         drawingPlatform = false;
+    }
+    if (newMode != SELECT_PLATFORM) {
+        // forget the selected platform if we switch off SELECT_PLATFORM
+        selectedPlatform = nullptr;
     }
     mode = newMode;
 }
@@ -25,7 +70,7 @@ void Editor::handleUserInput() {
         }
     }
 
-    if (mode == MOVE_PLATFORM) {
+    if (mode == SELECT_PLATFORM) {
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             searchingForSelectedPlatform = true;
         }
@@ -33,6 +78,9 @@ void Editor::handleUserInput() {
             Vector2 mouseDelta = GetMouseDelta();
             selectedPlatform->rectangle.x += mouseDelta.x;
             selectedPlatform->rectangle.y += mouseDelta.y;
+        }
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            selectedPlatform = nullptr;
         }
     }
 
@@ -48,19 +96,15 @@ Platform Editor::createDrawnPlatform() {
 }   
 
 void Editor::draw() {
-    // std::cout << game.editor.mode << std::endl;
-    if (GuiButton((Rectangle){ 30, 30, 30, 30 }, "#33#")) {
-        if (mode != DRAW_PLATFORM) {
-            setMode(DRAW_PLATFORM);
-        }
+    //----------------------------------------------------------------------------------
+    // Draw raygui components
+    //----------------------------------------------------------------------------------
+    for (EditorButton button : buttons) {
+        button.draw();
     }
-
-    if (GuiButton((Rectangle){ 70, 30, 30, 30 }, "#67#")) {
-        if (mode != MOVE_PLATFORM) {
-            setMode(MOVE_PLATFORM);
-        }
-    }
-
+    //----------------------------------------------------------------------------------
+    // Draw other GUI elements
+    //----------------------------------------------------------------------------------
     if (mode == DRAW_PLATFORM && drawingPlatform) {
         Rectangle previewRectangle;
         Vector2 currentMousePosition = GetMousePosition(); 
@@ -71,7 +115,7 @@ void Editor::draw() {
         DrawRectangleRec(previewRectangle, drawPlatformColor);
     }
 
-    if (mode == MOVE_PLATFORM && (selectedPlatform != nullptr)) {
+    if (mode == SELECT_PLATFORM && (selectedPlatform != nullptr)) {
         DrawRectangleLinesEx(selectedPlatform->rectangle, selectedLineThickness, SKYBLUE);
     }
 

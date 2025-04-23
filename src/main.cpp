@@ -45,12 +45,7 @@ struct GameState {
     Player player;
     Camera2D camera;
     Editor editor;
-    bool editorActive = false;
-    void checkEditorToggle() {
-        if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_Q)) {
-            editorActive = !editorActive;
-        }
-    }
+    // bool editorActive = false;
     std::vector<Platform> platforms;
     void addNewPlatform(Platform newPlatform) {
         platforms.push_back(newPlatform);
@@ -109,12 +104,16 @@ int main(void)
 //----------------------------------------------------------------------------------
 void UpdateDrawFrame(void)
 {
-    std::cout << game.editor.selectedPlatform << std::endl;
+    std::cout << game.player.touchingWallLeft << std::endl;
     // Update
     //----------------------------------------------------------------------------------
+    // TODO: refactor this for performance
     if (!game.player.touchingWallLeft) {
         for (Platform& platform : game.platforms) {
             game.player.checkCollidingWallLeft(&platform);
+            if (game.player.touchingWallLeft) {
+                break;
+            }
         }
     }
     else {
@@ -123,6 +122,9 @@ void UpdateDrawFrame(void)
     if (!game.player.touchingWallRight) {
         for (Platform& platform : game.platforms) {
             game.player.checkCollidingWallRight(&platform);
+            if (game.player.touchingWallRight) {
+                break;
+            }
         }
     }
     else {
@@ -131,6 +133,9 @@ void UpdateDrawFrame(void)
     if (!game.player.onPlatform) {
         for (Platform& platform : game.platforms) {
             game.player.checkPlatformLanding(&platform);
+            if (game.player.onPlatform) {
+                break;
+            }
         }
     }
     else {
@@ -140,10 +145,10 @@ void UpdateDrawFrame(void)
     game.player.handleUserInput();
     game.player.updatePosition();
 
-    game.checkEditorToggle();
+    game.editor.checkActiveToggle();
 
     // Check user input and update state of editor 
-    if (game.editorActive) {
+    if (game.editor.isActive) {
         game.editor.handleUserInput();
         if (game.editor.finishedDrawingPlatform) {
             game.addNewPlatform(game.editor.createDrawnPlatform());
@@ -172,7 +177,7 @@ void UpdateDrawFrame(void)
             }
             game.player.draw();
 
-            if (game.editorActive) {
+            if (game.editor.isActive) {
                 game.editor.draw();
             }
 
