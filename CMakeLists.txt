@@ -6,6 +6,7 @@ include(FetchContent)
 # Dependencies 
 set(RAYLIB_VERSION 5.5)
 set(RAYGUI_VERSION 4.0)
+set(CEREAL_VERSION 1.3.2)
 
 # Fetch Raylib
 FetchContent_Declare(
@@ -14,7 +15,6 @@ FetchContent_Declare(
     URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
     FIND_PACKAGE_ARGS
 )
-FetchContent_MakeAvailable(raylib)
 
 # Fetch Raygui
 FetchContent_Declare(
@@ -22,15 +22,16 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/raysan5/raygui.git
     GIT_TAG ${RAYGUI_VERSION}
 )
-FetchContent_MakeAvailable(raygui)
 
+# Fetch Cereal
 FetchContent_Declare(
     cereal
-    URL https://github.com/USCiLab/cereal/archive/refs/tags/v1.3.2.tar.gz
+    URL https://github.com/USCiLab/cereal/archive/refs/tags/v${CEREAL_VERSION}.tar.gz
     FIND_PACKAGE_ARGS
 )
-set(JUST_INSTALL_CEREAL ON CACHE BOOL "Only install cereal" FORCE)
-FetchContent_MakeAvailable(cereal)
+set(JUST_INSTALL_CEREAL ON CACHE BOOL "Only install cereal" FORCE)  # ignore optional depencies (e.g. Boost)
+
+FetchContent_MakeAvailable(raylib raygui cereal)
 
 # Add executable
 add_executable(${PROJECT_NAME})

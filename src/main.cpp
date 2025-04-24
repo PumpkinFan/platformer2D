@@ -4,7 +4,9 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#include "cereal/types/vector.hpp"
 #include "cereal/archives/binary.hpp"
+#include <fstream>
 
 #include "globals.h"
 #include "Player.h"
@@ -49,8 +51,21 @@ struct GameState {
     void addNewPlatform(Platform newPlatform) {
         platforms.push_back(newPlatform);
     };
-    void saveGameState();
-    void loadGameState();
+    void saveGameState() {
+        std::ofstream outputStream("gamestate.bin", std::ios::binary);
+        cereal::BinaryOutputArchive archive(outputStream);
+
+        // for testing
+        platforms.pop_back();
+
+        archive(platforms);
+    };
+    void loadGameState() {
+        std::ifstream inputStream("gamestate.bin", std::ios::binary);
+        cereal::BinaryInputArchive archive(inputStream);
+
+        archive(platforms);
+    };
 };
 
 
@@ -78,6 +93,9 @@ int main(void)
     game.camera.zoom = 1.0f;
 
     game.platforms = createPlatforms();
+
+    game.saveGameState();
+    game.loadGameState();
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
