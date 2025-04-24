@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#include "cereal/archives/binary.hpp"
 
 #include "globals.h"
 #include "Player.h"
@@ -15,7 +16,6 @@
 #endif
 
 // TODO
-// Fix any clicks on editor GUI while in editor mode
 // Add system to save and load level setups
 // Add more debugging info (play params, platform params, etc.)
 // New editor features (specify exact values, align platforms, ...)
@@ -45,11 +45,12 @@ struct GameState {
     Player player;
     Camera2D camera;
     Editor editor;
-    // bool editorActive = false;
     std::vector<Platform> platforms;
     void addNewPlatform(Platform newPlatform) {
         platforms.push_back(newPlatform);
     };
+    void saveGameState();
+    void loadGameState();
 };
 
 

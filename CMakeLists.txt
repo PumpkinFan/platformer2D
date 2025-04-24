@@ -24,6 +24,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raygui)
 
+FetchContent_Declare(
+    cereal
+    URL https://github.com/USCiLab/cereal/archive/refs/tags/v1.3.2.tar.gz
+    FIND_PACKAGE_ARGS
+)
+set(JUST_INSTALL_CEREAL ON CACHE BOOL "Only install cereal" FORCE)
+FetchContent_MakeAvailable(cereal)
+
 # Add executable
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
@@ -32,7 +40,7 @@ add_subdirectory(src)
 target_include_directories(${PROJECT_NAME} PRIVATE ${raygui_SOURCE_DIR}/src)
 
 # Link raylib
-target_link_libraries(${PROJECT_NAME} raylib)
+target_link_libraries(${PROJECT_NAME} raylib cereal)
 
 # Web Configurations
 if ("${PLATFORM}" STREQUAL "Web")
