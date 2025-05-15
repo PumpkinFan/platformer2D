@@ -49,6 +49,15 @@ void Player::handleUserInput() {
             }
         }
     }
+
+    // reset position
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_R)) {
+        position = initialPosition;
+        velocity = { 0.0, 0.0 };
+        onPlatform = nullptr;
+        touchingWallLeft = nullptr;
+        touchingWallRight = nullptr;
+    }
 }
 
 void Player::updatePosition() {
@@ -77,12 +86,13 @@ void Player::checkPlatformLanding(Platform *platform) {
 }
 
 void Player::checkCollidingWallLeft(Platform *platform) {
+    const float platformRightEdge = platform->rectangle.x + platform->rectangle.width;
     // check vertical alignment with platform
     if ((position.y + height > platform->rectangle.y) && (position.y < platform->rectangle.y + platform->rectangle.height)) {
         // check moving into right-edge of platform 
-        if ((position.x + velocity.x * GetFrameTime() < platform->rectangle.x + platform->rectangle.width) && 
-            (position.x >= platform->rectangle.x + platform->rectangle.width)) {
-            position.x = platform->rectangle.x + platform->rectangle.width;
+        if ((position.x + velocity.x * GetFrameTime() < platformRightEdge) && 
+            (position.x >= platformRightEdge)) {
+            position.x = platformRightEdge;
             velocity.x = 0;
             touchingWallLeft = platform;
         }

@@ -51,20 +51,20 @@ struct GameState {
     void addNewPlatform(Platform newPlatform) {
         platforms.push_back(newPlatform);
     };
-    void saveGameState() {
-        std::ofstream outputStream("C:/Users/clark/repos/platformer2D/gamestate.bin", std::ios::binary);
-        cereal::BinaryOutputArchive archive(outputStream);
+    // void saveGameState() {
+    //     std::ofstream outputStream("C:/Users/clark/repos/platformer2D/gamestate.bin", std::ios::binary);
+    //     cereal::BinaryOutputArchive archive(outputStream);
 
-        archive(platforms);
-        outputStream.close();
-    };
-    void loadGameState() {
-        std::ifstream inputStream("C:/Users/clark/repos/platformer2D/gamestate.bin", std::ios::binary);
-        cereal::BinaryInputArchive archive(inputStream);
+    //     archive(platforms);
+    //     outputStream.close();
+    // };
+    // void loadGameState() {
+    //     std::ifstream inputStream("C:/Users/clark/repos/platformer2D/gamestate.bin", std::ios::binary);
+    //     cereal::BinaryInputArchive archive(inputStream);
 
-        archive(platforms);
-        inputStream.close();
-    };
+    //     archive(platforms);
+    //     inputStream.close();
+    // };
 };
 
 
@@ -95,8 +95,8 @@ int main(void)
 
     game.platforms = createPlatforms();
 
-    game.saveGameState();
-    game.loadGameState();
+    // game.saveGameState();
+    // game.loadGameState();
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
@@ -127,10 +127,11 @@ void UpdateDrawFrame(void)
     // Update
     //----------------------------------------------------------------------------------
 
-    std::cout << game.player.touchingWallLeft << std::endl;
+    // std::cout << game.player.touchingWallLeft << std::endl;
 
     // TODO: refactor this for performance
     if (!game.player.touchingWallLeft) {
+        std::cout << "checking for left wall collisions" << std::endl;
         for (Platform& platform : game.platforms) {
             game.player.checkCollidingWallLeft(&platform);
             if (game.player.touchingWallLeft) {
