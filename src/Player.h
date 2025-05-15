@@ -7,7 +7,7 @@
 #include "Platform.h"
 
 struct Player {
-    Vector2 position = { screenWidth / 2, screenHeight / 2 };
+    Vector2 position = { 400, 225 };
     Vector2 velocity = { 0.0, 0.0 };
     float width = 10.0;
     float height = 10.0;

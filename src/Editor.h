@@ -35,6 +35,7 @@ private:
     Vector2 drawPlatformStart;
     Vector2 drawPlatformEnd;
     Color drawPlatformColor = GRAY;
+
     
 public:
     bool isActive = false;

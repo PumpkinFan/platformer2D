@@ -2,18 +2,24 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
+
 void EditorButton::draw() {
     if (GuiButton(bounds, text)) {
         onClick();
     }
 }
 
+#define DRAW_PLATFORM_BUTTON_ICON "#33#"
+#define SELECT_PLATFORM_BUTTON_ICON "#67#"
+#define SAVE_BUTTON_ICON "#02#"
+#define FILE_OPEN_BUTTON_ICON "#01#"
+
 std::vector<EditorButton> Editor::generateButtons() {
     std::vector<EditorButton> buttons = {};
     
     EditorButton drawPlatformButton = {
         {buttonsStart.x, buttonsStart.y, buttonSize, buttonSize},
-        "#33#",
+        DRAW_PLATFORM_BUTTON_ICON,
         [this]() { 
             if (mode != DRAW_PLATFORM) {
                 setMode(DRAW_PLATFORM);
@@ -25,7 +31,7 @@ std::vector<EditorButton> Editor::generateButtons() {
 
     EditorButton selectPlatformButton = {
         {buttonsStart.x + buttonSize + buttonPadding, buttonsStart.y, buttonSize, buttonSize},
-        "#67#",
+        SELECT_PLATFORM_BUTTON_ICON,
         [this]() {
             if (mode != SELECT_PLATFORM) {
                 setMode(SELECT_PLATFORM);
@@ -33,6 +39,24 @@ std::vector<EditorButton> Editor::generateButtons() {
         }
     };
     buttons.push_back(selectPlatformButton);
+
+    EditorButton saveGameStateButton = {
+        {buttonsStart.x + 2 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
+        SAVE_BUTTON_ICON,
+        [this]() {
+            return;
+        }
+    };
+    buttons.push_back(saveGameStateButton);
+
+    EditorButton loadGameStateButton = {
+        {buttonsStart.x + 3 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
+        FILE_OPEN_BUTTON_ICON,
+        [this]() {
+            return;
+        }
+    };
+    buttons.push_back(loadGameStateButton);
 
     return buttons;
 }

@@ -1,3 +1,4 @@
 build
 build_desktop
 .vscode
+*.bin

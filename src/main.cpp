@@ -52,19 +52,18 @@ struct GameState {
         platforms.push_back(newPlatform);
     };
     void saveGameState() {
-        std::ofstream outputStream("gamestate.bin", std::ios::binary);
+        std::ofstream outputStream("C:/Users/clark/repos/platformer2D/gamestate.bin", std::ios::binary);
         cereal::BinaryOutputArchive archive(outputStream);
 
-        // for testing
-        platforms.pop_back();
-
         archive(platforms);
+        outputStream.close();
     };
     void loadGameState() {
-        std::ifstream inputStream("gamestate.bin", std::ios::binary);
+        std::ifstream inputStream("C:/Users/clark/repos/platformer2D/gamestate.bin", std::ios::binary);
         cereal::BinaryInputArchive archive(inputStream);
 
         archive(platforms);
+        inputStream.close();
     };
 };
 
@@ -86,9 +85,11 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "platformer2D");
 
     // Initialize the camera
-    game.camera.target = Vector2 { game.player.position.x + game.player.width / 2, 
-                                   game.player.position.y + game.player.height / 2 };
-    game.camera.offset = Vector2 { screenWidth / 2, screenHeight / 2 };
+    // game.camera.target = Vector2 { game.player.position.x + game.player.width / 2, 
+    //                                game.player.position.y + game.player.height / 2 };
+    // game.camera.offset = Vector2 { screenWidth / 2, screenHeight / 2 };
+    game.camera.target = Vector2 { 0, 0 };
+    game.camera.offset = Vector2 { 0, 0 };
     game.camera.rotation = 0.0f;
     game.camera.zoom = 1.0f;
 
@@ -123,9 +124,11 @@ int main(void)
 //----------------------------------------------------------------------------------
 void UpdateDrawFrame(void)
 {
-    std::cout << game.player.touchingWallLeft << std::endl;
     // Update
     //----------------------------------------------------------------------------------
+
+    std::cout << game.player.touchingWallLeft << std::endl;
+
     // TODO: refactor this for performance
     if (!game.player.touchingWallLeft) {
         for (Platform& platform : game.platforms) {
