@@ -4,8 +4,8 @@
 //----------------------------------------------------------------------------------
 // Global Variables Definition
 //----------------------------------------------------------------------------------
-const int screenWidth = 1600;
-const int screenHeight = 900;
+const int screenWidth = 800;
+const int screenHeight = 450;
 
 const float gravity = 200.0;
 

@@ -9,8 +9,7 @@
 #include <fstream>
 
 #include "globals.h"
-#include "Player.h"
-#include "Editor.h"
+#include "GameState.h"
 
 
 #if defined(PLATFORM_WEB)
@@ -18,7 +17,8 @@
 #endif
 
 // TODO
-// Add system to save and load level setups
+// Finish save and load levels
+// Fix bug -> no wall collision after wall jumping (only on desktop build)
 // Add more debugging info (play params, platform params, etc.)
 // New editor features (specify exact values, align platforms, ...)
 
@@ -41,31 +41,6 @@ std::vector<Platform> createPlatforms() {
     platforms.push_back(verticalPlatformRight);
     return platforms;
 }
-
-
-struct GameState {
-    Player player;
-    Camera2D camera;
-    Editor editor;
-    std::vector<Platform> platforms;
-    void addNewPlatform(Platform newPlatform) {
-        platforms.push_back(newPlatform);
-    };
-    // void saveGameState() {
-    //     std::ofstream outputStream("C:/Users/clark/repos/platformer2D/gamestate.bin", std::ios::binary);
-    //     cereal::BinaryOutputArchive archive(outputStream);
-
-    //     archive(platforms);
-    //     outputStream.close();
-    // };
-    // void loadGameState() {
-    //     std::ifstream inputStream("C:/Users/clark/repos/platformer2D/gamestate.bin", std::ios::binary);
-    //     cereal::BinaryInputArchive archive(inputStream);
-
-    //     archive(platforms);
-    //     inputStream.close();
-    // };
-};
 
 
 GameState game;
@@ -99,7 +74,7 @@ int main(void)
     // game.loadGameState();
 
 #if defined(PLATFORM_WEB)
-    emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
+    emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
 #else
     SetTargetFPS(60);   // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -126,9 +101,6 @@ void UpdateDrawFrame(void)
 {
     // Update
     //----------------------------------------------------------------------------------
-
-    // std::cout << game.player.touchingWallLeft << std::endl;
-
     // TODO: refactor this for performance
     if (!game.player.touchingWallLeft) {
         std::cout << "checking for left wall collisions" << std::endl;
@@ -186,6 +158,13 @@ void UpdateDrawFrame(void)
                 }
             }
         }
+    }
+
+    // Display debug information
+    //----------------------------------------------------------------------------------
+    game.checkToggleDebugInfo();
+    if (game.debugInformationOn) {
+        game.displayDebugInformation();
     }
 
     // Draw

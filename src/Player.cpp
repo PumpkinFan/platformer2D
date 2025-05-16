@@ -6,18 +6,21 @@ void Player::draw() {
 }
 
 void Player::handleUserInput() {
+    // walk left
     if (IsKeyDown(KEY_A) && velocity.x > -maxHorizontalSpeed && !touchingWallLeft) {
         velocity = Vector2Add(velocity, { -horizontalAcceleration * GetFrameTime(), 0.0 });
         if (touchingWallRight) {
             touchingWallRight = nullptr;
         }
     }
+    // walk right
     if (IsKeyDown(KEY_D) && velocity.x < maxHorizontalSpeed && !touchingWallRight) {
         velocity = Vector2Add(velocity, { horizontalAcceleration * GetFrameTime(), 0.0 });
         if (touchingWallLeft) {
             touchingWallLeft = nullptr;
         }
     }
+    // handle friction
     if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D)) {
         float frictionModifier = (!onPlatform ? 0.5f : 1.0f);
         if (velocity.x > 0) {
@@ -61,7 +64,9 @@ void Player::handleUserInput() {
 }
 
 void Player::updatePosition() {
+    // add velocity
     position = Vector2Add(position, Vector2Scale(velocity, GetFrameTime()));
+    // handle gravity
     if (onPlatform == nullptr) {
         if (velocity.y < 0) {  // player moving upwards
             velocity = Vector2Add(velocity, { 0.0, gravity * upwardGravityMultiplier * GetFrameTime() });

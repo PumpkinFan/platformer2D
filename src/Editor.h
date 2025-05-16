@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <functional>
+#include <string>
 
 enum EditorMode { 
     DO_NOTHING = 0,
