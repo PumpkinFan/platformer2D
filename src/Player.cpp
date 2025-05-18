@@ -54,7 +54,7 @@ void Player::handleUserInput() {
     }
 
     // reset position
-    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_R)) {
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_LEFT_ALT) && IsKeyPressed(KEY_R)) {
         position = initialPosition;
         velocity = { 0.0, 0.0 };
         onPlatform = nullptr;
@@ -95,8 +95,8 @@ void Player::checkCollidingWallLeft(Platform *platform) {
     // check vertical alignment with platform
     if ((position.y + height > platform->rectangle.y) && (position.y < platform->rectangle.y + platform->rectangle.height)) {
         // check moving into right-edge of platform 
-        if ((position.x + velocity.x * GetFrameTime() < platformRightEdge) && 
-            (position.x >= platformRightEdge)) {
+        if ((position.x < platformRightEdge) && 
+            (position.x + width >= platformRightEdge)) {
             position.x = platformRightEdge;
             velocity.x = 0;
             touchingWallLeft = platform;
@@ -108,8 +108,8 @@ void Player::checkCollidingWallRight(Platform *platform) {
     // check vertical alignment with platform
     if ((position.y + height > platform->rectangle.y) && (position.y < platform->rectangle.y + platform->rectangle.height)) {
         // check moving into left-edge of platform or at the left-edge
-        if ((position.x + velocity.x * GetFrameTime() + width > platform->rectangle.x) && 
-            (position.x + width <= platform->rectangle.x)) {
+        if ((position.x + width > platform->rectangle.x) && 
+            (position.x <= platform->rectangle.x)) {
             position.x = platform->rectangle.x - width;
             velocity.x = 0;
             touchingWallRight = platform;
