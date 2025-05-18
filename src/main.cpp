@@ -101,9 +101,11 @@ void UpdateDrawFrame(void)
 {
     // Update
     //----------------------------------------------------------------------------------
+    
     // TODO: refactor this for performance
+    // Player mechanics
+    //----------------------------------------------------------------------------------
     if (!game.player.touchingWallLeft) {
-        std::cout << "checking for left wall collisions" << std::endl;
         for (Platform& platform : game.platforms) {
             game.player.checkCollidingWallLeft(&platform);
             if (game.player.touchingWallLeft) {
@@ -139,7 +141,9 @@ void UpdateDrawFrame(void)
     
     game.player.handleUserInput();
     game.player.updatePosition();
-
+    
+    // Editor stuff
+    //----------------------------------------------------------------------------------
     game.editor.checkActiveToggle();
 
     // Check user input and update state of editor 
@@ -160,31 +164,31 @@ void UpdateDrawFrame(void)
         }
     }
 
-    // Display debug information
-    //----------------------------------------------------------------------------------
-    game.checkToggleDebugInfo();
-    if (game.debugInformationOn) {
-        game.displayDebugInformation();
-    }
-
+    
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
     
-        ClearBackground(RAYWHITE);
-        
-        BeginMode2D(game.camera);
-            for (Platform platform : game.platforms) {
-                platform.draw();
-            }
-            game.player.draw();
+    ClearBackground(RAYWHITE);
+    
+    BeginMode2D(game.camera);
+    for (Platform platform : game.platforms) {
+        platform.draw();
+    }
+    game.player.draw();
+    
+    if (game.editor.isActive) {
+        game.editor.draw();
+    }
+    
+    EndMode2D();
 
-            if (game.editor.isActive) {
-                game.editor.draw();
-            }
-
-        EndMode2D();
-
+    // Display debug information
+    game.checkToggleDebugInfo();
+    if (game.debugInformationOn) {
+        game.displayDebugInformation();
+    }
+    
     EndDrawing();
     //----------------------------------------------------------------------------------
 }

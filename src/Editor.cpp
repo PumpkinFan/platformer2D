@@ -11,8 +11,8 @@ void EditorButton::draw() {
 
 #define DRAW_PLATFORM_BUTTON_ICON "#33#"
 #define SELECT_PLATFORM_BUTTON_ICON "#67#"
-#define SAVE_BUTTON_ICON "#02#"
-#define FILE_OPEN_BUTTON_ICON "#01#"
+#define FILE_SAVE_BUTTON_ICON "#02#"
+#define FILE_LOAD_BUTTON_ICON "#01#"
 
 std::vector<EditorButton> Editor::generateButtons() {
     std::vector<EditorButton> buttons = {};
@@ -42,7 +42,7 @@ std::vector<EditorButton> Editor::generateButtons() {
 
     EditorButton saveGameStateButton = {
         {buttonsStart.x + 2 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
-        SAVE_BUTTON_ICON,
+        FILE_SAVE_BUTTON_ICON,
         [this]() {
             return;
         }
@@ -51,7 +51,7 @@ std::vector<EditorButton> Editor::generateButtons() {
 
     EditorButton loadGameStateButton = {
         {buttonsStart.x + 3 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
-        FILE_OPEN_BUTTON_ICON,
+        FILE_LOAD_BUTTON_ICON,
         [this]() {
             return;
         }
@@ -103,7 +103,7 @@ void Editor::handleUserInput() {
             selectedPlatform->rectangle.x += mouseDelta.x;
             selectedPlatform->rectangle.y += mouseDelta.y;
         }
-        if (IsKeyPressed(KEY_ESCAPE)) {
+        if (IsKeyPressed(KEY_GRAVE)) {  // Detect '~' key on U.S. layout
             selectedPlatform = nullptr;
         }
     }

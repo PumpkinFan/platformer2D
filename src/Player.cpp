@@ -118,12 +118,18 @@ void Player::checkCollidingWallRight(Platform *platform) {
 }
 
 void Player::checkSlidingOffWallLeft() {
+    if (touchingWallLeft == nullptr) {
+        return;
+    }
     if (!(position.y + height > touchingWallLeft->rectangle.y && position.y < touchingWallLeft->rectangle.y + touchingWallLeft->rectangle.height)) {
         touchingWallLeft = nullptr;
     }
 }
 
 void Player::checkSlidingOffWallRight() {
+    if (touchingWallRight == nullptr) {
+        return;
+    }
     if (!(position.y + height > touchingWallRight->rectangle.y && position.y < touchingWallRight->rectangle.y + touchingWallRight->rectangle.height)) {
         touchingWallRight = nullptr;
     }

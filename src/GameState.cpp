@@ -1,7 +1,7 @@
 #include "GameState.h"
 
 void GameState::checkToggleDebugInfo() {
-    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_E)) {
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Q) && !IsKeyDown(KEY_LEFT_SHIFT)) {
         debugInformationOn = !debugInformationOn;
     }
 }
@@ -14,6 +14,9 @@ void GameState::displayDebugInformation() {
     debugInformation << "PLAYER Y POS " << player.position.y << "\n";
     debugInformation << "PLAYER X VEL " << player.velocity.x << "\n";
     debugInformation << "PLAYER Y VEL " << player.velocity.y << "\n";
+    debugInformation << "TOUCHING WALL L " << (bool)(player.touchingWallLeft) << "\n";
+    debugInformation << "TOUCHING WALL R " << (bool)(player.touchingWallRight) << "\n";
+
 
     DrawText(debugInformation.str().c_str(), screenWidth - 150, 50, 0, LIME);
 }
