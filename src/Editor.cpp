@@ -44,7 +44,7 @@ std::vector<EditorButton> Editor::generateButtons() {
         {buttonsStart.x + 2 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
         FILE_SAVE_BUTTON_ICON,
         [this]() {
-            return;
+            savingGameState = true;
         }
     };
     buttons.push_back(saveGameStateButton);
@@ -53,7 +53,7 @@ std::vector<EditorButton> Editor::generateButtons() {
         {buttonsStart.x + 3 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
         FILE_LOAD_BUTTON_ICON,
         [this]() {
-            return;
+            loadingGameState = true;
         }
     };
     buttons.push_back(loadGameStateButton);
@@ -125,6 +125,15 @@ void Editor::draw() {
     //----------------------------------------------------------------------------------
     for (EditorButton button : buttons) {
         button.draw();
+
+    }
+    if (savingGameState) {
+        int finishedEnteringPath = GuiTextBox(Rectangle { 100, 100, 400, 30 }, tempSavePath, 128, true);
+        if (finishedEnteringPath) {
+            saveTargetPath = std::filesystem::path(tempSavePath);
+            savingGameState = false;
+            // tempSavePath[0] = '\0'; // could be used to clear the temporary path
+        }
     }
     //----------------------------------------------------------------------------------
     // Draw other GUI elements

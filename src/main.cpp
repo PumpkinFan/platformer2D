@@ -4,10 +4,6 @@
 #include "raylib.h"
 #include "raymath.h"
 
-#include "cereal/types/vector.hpp"
-#include "cereal/archives/binary.hpp"
-#include <fstream>
-
 #include "globals.h"
 #include "GameState.h"
 
@@ -18,8 +14,6 @@
 
 // TODO
 // Finish save and load levels
-// Fix bug -> no wall collision after wall jumping (only on desktop build)
-// Add more debugging info (play params, platform params, etc.)
 // New editor features (specify exact values, align platforms, ...)
 
 
@@ -74,7 +68,7 @@ int main(void)
     // game.loadGameState();
 
 #if defined(PLATFORM_WEB)
-    emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
+    emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
     SetTargetFPS(60);   // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
