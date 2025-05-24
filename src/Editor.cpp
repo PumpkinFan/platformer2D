@@ -2,7 +2,6 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
-
 void EditorButton::draw() {
     if (GuiButton(bounds, text)) {
         onClick();
@@ -44,7 +43,7 @@ std::vector<EditorButton> Editor::generateButtons() {
         {buttonsStart.x + 2 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
         FILE_SAVE_BUTTON_ICON,
         [this]() {
-            savingGameState = true;
+            showSaveInputBox = true;
         }
     };
     buttons.push_back(saveGameStateButton);
@@ -53,7 +52,7 @@ std::vector<EditorButton> Editor::generateButtons() {
         {buttonsStart.x + 3 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
         FILE_LOAD_BUTTON_ICON,
         [this]() {
-            loadingGameState = true;
+            showLoadInputBox = true;
         }
     };
     buttons.push_back(loadGameStateButton);
@@ -119,6 +118,16 @@ Platform Editor::createDrawnPlatform() {
     return platform;
 }   
 
+std::filesystem::path Editor::readSavePath() {
+    savingGameState = false;
+    return saveTargetPath;
+}
+
+std::filesystem::path Editor::readLoadPath() {
+    loadingGameState = false;
+    return loadTargetPath;
+}
+
 void Editor::draw() {
     //----------------------------------------------------------------------------------
     // Draw raygui components
@@ -127,12 +136,24 @@ void Editor::draw() {
         button.draw();
 
     }
-    if (savingGameState) {
-        int finishedEnteringPath = GuiTextBox(Rectangle { 100, 100, 400, 30 }, tempSavePath, 128, true);
-        if (finishedEnteringPath) {
+    if (showSaveInputBox) {
+        // int finishedEnteringPath = GuiTextBox(Rectangle { 100, 100, 400, 30 }, tempSavePath, 128, true);
+        bool textInputBoxSecretViewActive = false;
+        int saveBoxInput = GuiTextInputBox(Rectangle { 100, 100, 300, 150 }, 
+                                           "Save File:", 
+                                           "Enter file path:",
+                                           "Save; Cancel",
+                                           tempSavePath,
+                                           128,
+                                           &textInputBoxSecretViewActive);
+        if (saveBoxInput == 1) {
             saveTargetPath = std::filesystem::path(tempSavePath);
-            savingGameState = false;
+            showSaveInputBox = false;
+            savingGameState = true;
             // tempSavePath[0] = '\0'; // could be used to clear the temporary path
+        }
+        else if(saveBoxInput == 2) {
+            showSaveInputBox = false;
         }
     }
     //----------------------------------------------------------------------------------

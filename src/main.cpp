@@ -185,4 +185,10 @@ void UpdateDrawFrame(void)
     
     EndDrawing();
     //----------------------------------------------------------------------------------
+
+    // Check if we are saving or loading the game state
+    if (game.editor.savingGameState) {
+        game.saveGameState(game.editor.readSavePath());
+    }
+
 }

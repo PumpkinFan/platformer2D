@@ -42,9 +42,9 @@ private:
 
     char tempSavePath[128];
     char tempLoadPath[128];
-    bool savingGameState = false;
+    bool showSaveInputBox = false;
     std::filesystem::path saveTargetPath;
-    bool loadingGameState = false;
+    bool showLoadInputBox = false;
     std::filesystem::path loadTargetPath;
     
 public:
@@ -61,6 +61,8 @@ public:
     Platform* selectedPlatform = nullptr;
     float selectedLineThickness = 2.0f;
 
+    bool savingGameState = false;
+    bool loadingGameState = false;
     std::filesystem::path readSavePath();
     std::filesystem::path readLoadPath();
     
