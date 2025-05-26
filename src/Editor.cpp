@@ -43,7 +43,7 @@ std::vector<EditorButton> Editor::generateButtons() {
         {buttonsStart.x + 2 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
         FILE_SAVE_BUTTON_ICON,
         [this]() {
-            showSaveInputBox = true;
+            setMode(ENTER_SAVE_PATH);
         }
     };
     buttons.push_back(saveGameStateButton);
@@ -52,7 +52,7 @@ std::vector<EditorButton> Editor::generateButtons() {
         {buttonsStart.x + 3 * (buttonSize + buttonPadding), buttonsStart.y, buttonSize, buttonSize},
         FILE_LOAD_BUTTON_ICON,
         [this]() {
-            showLoadInputBox = true;
+            setMode(ENTER_LOAD_PATH);
         }
     };
     buttons.push_back(loadGameStateButton);
@@ -136,11 +136,10 @@ void Editor::draw() {
         button.draw();
 
     }
-    if (showSaveInputBox) {
-        // int finishedEnteringPath = GuiTextBox(Rectangle { 100, 100, 400, 30 }, tempSavePath, 128, true);
-        bool textInputBoxSecretViewActive = false;
-        int saveBoxInput = GuiTextInputBox(Rectangle { 100, 100, 300, 150 }, 
-                                           "Save File:", 
+    bool textInputBoxSecretViewActive = false;
+    if (mode == ENTER_SAVE_PATH) {
+        int saveBoxInput = GuiTextInputBox(Rectangle { 100, 100, 500, 150 }, 
+                                           "Save to File", 
                                            "Enter file path:",
                                            "Save; Cancel",
                                            tempSavePath,
@@ -148,14 +147,32 @@ void Editor::draw() {
                                            &textInputBoxSecretViewActive);
         if (saveBoxInput == 1) {
             saveTargetPath = std::filesystem::path(tempSavePath);
-            showSaveInputBox = false;
+            setMode(DO_NOTHING);
             savingGameState = true;
             // tempSavePath[0] = '\0'; // could be used to clear the temporary path
         }
-        else if(saveBoxInput == 2) {
-            showSaveInputBox = false;
+        else if (saveBoxInput == 2) {
+            setMode(DO_NOTHING);
         }
     }
+    if (mode == ENTER_LOAD_PATH) {
+        int loadBoxInput = GuiTextInputBox(Rectangle { 100, 100, 500, 150 }, 
+                                           "Load from File", 
+                                           "Enter file path:",
+                                           "Load; Cancel",
+                                           tempLoadPath,
+                                           128,
+                                           &textInputBoxSecretViewActive);
+        if (loadBoxInput == 1) {
+            loadTargetPath = std::filesystem::path(tempLoadPath);
+            setMode(DO_NOTHING);
+            loadingGameState = true;
+        }
+        else if (loadBoxInput == 2) {
+            setMode(DO_NOTHING);
+        }
+    }
+
     //----------------------------------------------------------------------------------
     // Draw other GUI elements
     //----------------------------------------------------------------------------------

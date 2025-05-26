@@ -40,9 +40,14 @@ struct GameState {
     };
     void loadGameState(std::filesystem::path loadPath) {
         std::ifstream inputStream(loadPath, std::ios::binary);
-        cereal::BinaryInputArchive archive(inputStream);
+        if (inputStream) {
+            cereal::BinaryInputArchive archive(inputStream);
+            archive(platforms);
+        }
+        else {
+            std::cerr << "Failed to open file at " << loadPath.string() << "\n";
+        }
 
-        archive(platforms);
         inputStream.close();
     };
 };

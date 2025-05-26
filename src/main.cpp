@@ -190,5 +190,8 @@ void UpdateDrawFrame(void)
     if (game.editor.savingGameState) {
         game.saveGameState(game.editor.readSavePath());
     }
+    if (game.editor.loadingGameState) {
+        game.loadGameState(game.editor.readLoadPath());
+    }
 
 }
