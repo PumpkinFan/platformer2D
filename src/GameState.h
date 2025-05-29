@@ -31,25 +31,9 @@ struct GameState {
     void displayDebugInformation();
 
     // TODO: Figure out how to ignore this on Web
-    void saveGameState(std::filesystem::path savePath){
-        std::ofstream outputStream(savePath, std::ios::binary);
-        cereal::BinaryOutputArchive archive(outputStream);
-
-        archive(platforms);
-        outputStream.close();
-    };
-    void loadGameState(std::filesystem::path loadPath) {
-        std::ifstream inputStream(loadPath, std::ios::binary);
-        if (inputStream) {
-            cereal::BinaryInputArchive archive(inputStream);
-            archive(platforms);
-        }
-        else {
-            std::cerr << "Failed to open file at " << loadPath.string() << "\n";
-        }
-
-        inputStream.close();
-    };
+    void saveGameState(std::filesystem::path savePath);
+    void loadGameState(std::filesystem::path loadPath);
+    
 };
 
 #endif

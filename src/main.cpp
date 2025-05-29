@@ -13,8 +13,9 @@
 #endif
 
 // TODO
-// Finish save and load levels
 // New editor features (specify exact values, align platforms, ...)
+// Pixel art - design player character, platforms, game objects, etc.
+// New game mechanics (coins, end goal)
 
 
 //----------------------------------------------------------------------------------

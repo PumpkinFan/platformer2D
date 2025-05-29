@@ -17,6 +17,29 @@ void GameState::displayDebugInformation() {
     debugInformation << "TOUCHING WALL L " << (bool)(player.touchingWallLeft) << "\n";
     debugInformation << "TOUCHING WALL R " << (bool)(player.touchingWallRight) << "\n";
 
-
     DrawText(debugInformation.str().c_str(), screenWidth - 150, 50, 0, LIME);
 }
+
+void GameState::saveGameState(std::filesystem::path savePath) {
+    std::ofstream outputStream(savePath, std::ios::binary);
+    cereal::BinaryOutputArchive archive(outputStream);
+
+    archive(platforms);
+    archive(player);
+    // archive(editor);
+    outputStream.close();
+};
+
+void GameState::loadGameState(std::filesystem::path loadPath) {
+    std::ifstream inputStream(loadPath, std::ios::binary);
+    if (inputStream) {
+        cereal::BinaryInputArchive archive(inputStream);
+        archive(platforms);
+        archive(player);
+    }
+    else {
+        std::cerr << "Failed to open file at " << loadPath.string() << "\n";
+    }
+
+    inputStream.close();
+};

@@ -37,6 +37,18 @@ struct Player {
     void checkCollidingWallRight(Platform *platform);
     void checkSlidingOffWallLeft();
     void checkSlidingOffWallRight();
+
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(
+            position.x,
+            position.y,
+            initialPosition.x,
+            initialPosition.y,
+            velocity.x,
+            velocity.y
+        );
+    }
 };
 
 
