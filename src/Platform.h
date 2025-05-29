@@ -11,7 +11,7 @@ struct Platform {
     template<class Archive>
     void serialize(Archive& archive) {
         archive(rectangle.x, rectangle.y, rectangle.width, rectangle.height, 
-                color.r, color.b, color.g, color.a);
+                color.r, color.g, color.b, color.a);
     }
 };
 
