@@ -60,10 +60,20 @@ void Player::handleUserInput() {
         onPlatform = nullptr;
         touchingWallLeft = nullptr;
         touchingWallRight = nullptr;
+        reachedGoal = nullptr;
     }
 }
 
 void Player::updatePosition() {
+    if (reachedGoal) {
+        const Vector2 targetPosition = {reachedGoal->hitbox.x + 0.5f * reachedGoal->hitbox.width - 0.5f * width,
+                                        reachedGoal->hitbox.y + 0.5f * reachedGoal->hitbox.height - 0.5F * height};
+        const Vector2 goalAnimationVelocity = Vector2Subtract(targetPosition, position);                                
+        if (!(Vector2Equals(position, targetPosition))) {
+            position = Vector2Add(position, Vector2Scale(goalAnimationVelocity, GetFrameTime()));
+        }
+        return;
+    }
     // add velocity
     position = Vector2Add(position, Vector2Scale(velocity, GetFrameTime()));
     // handle gravity
@@ -142,6 +152,12 @@ void Player::checkWalkOffPlatform() {
     if ((position.x + width < onPlatform->rectangle.x) || 
         (position.x > onPlatform->rectangle.x + onPlatform->rectangle.width)) {
         onPlatform = nullptr;
+    }
+}
+
+void Player::checkCollisionWithGoal(Goal *goal) {
+    if (CheckCollisionRecs(getPlayerRectangle(), goal->hitbox)) {
+        reachedGoal = goal;
     }
 }
 

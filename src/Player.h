@@ -5,6 +5,7 @@
 #include "raymath.h"
 #include "globals.h"
 #include "Platform.h"
+#include "Goal.h"
 
 struct Player {
     Vector2 initialPosition = { 400, 225 };
@@ -37,6 +38,11 @@ struct Player {
     void checkCollidingWallRight(Platform *platform);
     void checkSlidingOffWallLeft();
     void checkSlidingOffWallRight();
+
+    void checkCollisionWithGoal(Goal *goal);
+    // pointer to a goal the player has reached
+    // if null the player is still completing the level
+    Goal *reachedGoal = nullptr;
 
     template<class Archive>
     void serialize(Archive& archive) {

@@ -15,4 +15,4 @@ struct Platform {
     }
 };
 
-#endif
+#endif // PLATFORM_H

@@ -64,9 +64,7 @@ int main(void)
     game.camera.zoom = 1.0f;
 
     game.platforms = createPlatforms();
-
-    // game.saveGameState();
-    // game.loadGameState();
+    game.goal = Goal { Rectangle { 300, 250, 35, 35 } };
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
@@ -133,9 +131,11 @@ void UpdateDrawFrame(void)
     else {
         game.player.checkWalkOffPlatform();
     }
-    
+
     game.player.handleUserInput();
+    game.player.checkCollisionWithGoal(&game.goal);
     game.player.updatePosition();
+    
     
     // Editor stuff
     //----------------------------------------------------------------------------------
@@ -170,6 +170,7 @@ void UpdateDrawFrame(void)
     for (Platform platform : game.platforms) {
         platform.draw();
     }
+    game.goal.draw();
     game.player.draw();
     
     if (game.editor.isActive) {

@@ -16,7 +16,6 @@
 #include "Editor.h"
 
 
-
 struct GameState {
     Player player;
     Camera2D camera;
@@ -25,6 +24,7 @@ struct GameState {
     void addNewPlatform(Platform newPlatform) {
         platforms.push_back(newPlatform);
     };
+    Goal goal;
 
     void checkToggleDebugInfo();
     bool debugInformationOn = false;
@@ -36,4 +36,4 @@ struct GameState {
     
 };
 
-#endif
+#endif // GAMESTATE_H
