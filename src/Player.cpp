@@ -2,7 +2,8 @@
 #include <iostream>
 
 void Player::draw() {
-    DrawRectangleV(position, { width, height }, RED);
+    // DrawRectangleV(position, { width, height }, RED);
+    DrawTextureV(texture, position, WHITE);
 }
 
 void Player::handleUserInput() {
@@ -65,10 +66,11 @@ void Player::handleUserInput() {
 }
 
 void Player::updatePosition() {
+    // guard clause if player has finished the level
     if (reachedGoal) {
-        const Vector2 targetPosition = {reachedGoal->hitbox.x + 0.5f * reachedGoal->hitbox.width - 0.5f * width,
-                                        reachedGoal->hitbox.y + 0.5f * reachedGoal->hitbox.height - 0.5F * height};
-        const Vector2 goalAnimationVelocity = Vector2Subtract(targetPosition, position);                                
+        const Vector2 targetPosition = {reachedGoal->position.x + 0.5f * reachedGoal->width - 0.5f * width,
+                                        reachedGoal->position.y + 0.5f * reachedGoal->height - 0.5F * height};
+        const Vector2 goalAnimationVelocity = Vector2Scale(Vector2Subtract(targetPosition, position), 2.0);                                
         if (!(Vector2Equals(position, targetPosition))) {
             position = Vector2Add(position, Vector2Scale(goalAnimationVelocity, GetFrameTime()));
         }
@@ -156,7 +158,7 @@ void Player::checkWalkOffPlatform() {
 }
 
 void Player::checkCollisionWithGoal(Goal *goal) {
-    if (CheckCollisionRecs(getPlayerRectangle(), goal->hitbox)) {
+    if (CheckCollisionRecs(getPlayerRectangle(), Rectangle { goal->position.x, goal->position.y, goal->width, goal->height })) {
         reachedGoal = goal;
     }
 }

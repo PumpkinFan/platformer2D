@@ -50,21 +50,22 @@ void UpdateDrawFrame(void);     // Update and Draw one frame
 //------------------------------------------------------------------------------------
 int main(void)
 {
+    std::cout << "starting main" << std::endl;
     // Initialization
     //--------------------------------------------------------------------------------------
     InitWindow(screenWidth, screenHeight, "platformer2D");
 
+    // Load player texture
+    game.player.loadTexture();
+
     // Initialize the camera
-    // game.camera.target = Vector2 { game.player.position.x + game.player.width / 2, 
-    //                                game.player.position.y + game.player.height / 2 };
-    // game.camera.offset = Vector2 { screenWidth / 2, screenHeight / 2 };
     game.camera.target = Vector2 { 0, 0 };
     game.camera.offset = Vector2 { 0, 0 };
     game.camera.rotation = 0.0f;
     game.camera.zoom = 1.0f;
 
     game.platforms = createPlatforms();
-    game.goal = Goal { Rectangle { 300, 250, 35, 35 } };
+
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
@@ -84,6 +85,9 @@ int main(void)
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
+    // Free any loaded assets
+    //--------------------------------------------------------------------------------------
+    game.player.unloadTexture();
     return 0;
 }
 
@@ -195,5 +199,6 @@ void UpdateDrawFrame(void)
     if (game.editor.loadingGameState) {
         game.loadGameState(game.editor.readLoadPath());
     }
+
 
 }

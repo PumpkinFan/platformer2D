@@ -16,6 +16,7 @@ void GameState::displayDebugInformation() {
     debugInformation << "PLAYER Y VEL " << player.velocity.y << "\n";
     debugInformation << "TOUCHING WALL L " << (bool)(player.touchingWallLeft) << "\n";
     debugInformation << "TOUCHING WALL R " << (bool)(player.touchingWallRight) << "\n";
+    debugInformation << "REACHED GOAL " << (bool)(player.reachedGoal) << "\n";
 
     DrawText(debugInformation.str().c_str(), screenWidth - 150, 50, 0, LIME);
 }
