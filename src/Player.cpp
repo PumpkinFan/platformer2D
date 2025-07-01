@@ -3,7 +3,9 @@
 
 void Player::draw() {
     // DrawRectangleV(position, { width, height }, RED);
-    DrawTextureV(texture, position, WHITE);
+    // DrawTextureV(texture, position, WHITE);
+    DrawTexturePro(texture, animation.getCurrentFrame(), Rectangle { position.x, position.y, animation.frameWidth, animation.frameHeight },
+                   Vector2 { 0.0, 0.0 }, 0.0, WHITE);
 }
 
 void Player::handleUserInput() {

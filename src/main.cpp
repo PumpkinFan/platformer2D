@@ -139,7 +139,7 @@ void UpdateDrawFrame(void)
     game.player.handleUserInput();
     game.player.checkCollisionWithGoal(&game.goal);
     game.player.updatePosition();
-    
+    game.player.updateAnimation();    
     
     // Editor stuff
     //----------------------------------------------------------------------------------

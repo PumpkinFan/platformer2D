@@ -4,19 +4,21 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "globals.h"
+#include "Animation.h"
 #include "Platform.h"
 #include "Goal.h"
 
 struct Player {
 private:
-    const char *textureFilePath = "assets/stickman32.png";
+    const char *textureFilePath = "assets/stickman32-running.png";
     Texture2D texture;
+    Animation animation = { 0, 3, 5, 5, 20, 32};
     
 public:
     Vector2 initialPosition = { 400, 225 };
     Vector2 position = initialPosition;
     Vector2 velocity = { 0.0, 0.0 };
-    float width = 32.0;
+    float width = 20.0;
     float height = 32.0;
     
     float horizontalAcceleration = 200.0;
@@ -30,11 +32,11 @@ public:
     // if null the player is "in air"
     Platform *onPlatform = nullptr;
 
-    // point to platform touched by player on the left
+    // pointer to platform touched by player on the left
     // if null the player isn't touching anything to the left
     Platform *touchingWallLeft = nullptr;
     
-    // point to platform touched by player on the right
+    // pointer to platform touched by player on the right
     // if null the player isn't touching anything to the right
     Platform *touchingWallRight = nullptr;
     
@@ -72,6 +74,9 @@ public:
     }
     void unloadTexture() {
         UnloadTexture(texture);
+    }
+    void updateAnimation() {
+        animation.update();
     }
 
 };
