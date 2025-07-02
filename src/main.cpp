@@ -50,7 +50,6 @@ void UpdateDrawFrame(void);     // Update and Draw one frame
 //------------------------------------------------------------------------------------
 int main(void)
 {
-    std::cout << "starting main" << std::endl;
     // Initialization
     //--------------------------------------------------------------------------------------
     InitWindow(screenWidth, screenHeight, "platformer2D");

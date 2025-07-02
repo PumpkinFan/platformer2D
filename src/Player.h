@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "raymath.h"
+#include "rlgl.h"
 #include "globals.h"
 #include "Animation.h"
 #include "Platform.h"
@@ -10,9 +11,11 @@
 
 struct Player {
 private:
-    const char *textureFilePath = "assets/stickman32-running.png";
-    Texture2D texture;
-    Animation animation = { 0, 3, 5, 5, 20, 32};
+    const char *idleTextureFilePath = "assets/stickman32-idle.png";
+    const char *runningTextureFilePath = "assets/stickman32-running.png";
+    Texture2D idleTexture;
+    Texture2D runningTexture;
+    Animation runningAnimation = { 0, 3, 5, 5, 20, 32 };
     
 public:
     Vector2 initialPosition = { 400, 225 };
@@ -40,6 +43,10 @@ public:
     // if null the player isn't touching anything to the right
     Platform *touchingWallRight = nullptr;
     
+    // pointer to a goal the player has reached
+    // if null the player is still completing the level
+    Goal *reachedGoal = nullptr;
+
     // could be used for collision detection
     Rectangle getPlayerRectangle();
 
@@ -52,11 +59,8 @@ public:
     void checkCollidingWallRight(Platform *platform);
     void checkSlidingOffWallLeft();
     void checkSlidingOffWallRight();
-
     void checkCollisionWithGoal(Goal *goal);
-    // pointer to a goal the player has reached
-    // if null the player is still completing the level
-    Goal *reachedGoal = nullptr;
+    
 
     template<class Archive>
     void serialize(Archive& archive) {
@@ -70,13 +74,14 @@ public:
         );
     }
     void loadTexture() {
-        texture = LoadTexture(textureFilePath);
+        idleTexture = LoadTexture(idleTextureFilePath);
+        runningTexture = LoadTexture(runningTextureFilePath);
     }
     void unloadTexture() {
-        UnloadTexture(texture);
+        UnloadTexture(runningTexture);
     }
     void updateAnimation() {
-        animation.update();
+        runningAnimation.update();
     }
 
 };
