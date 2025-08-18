@@ -1,5 +1,7 @@
 #include "raylib.h"
 
+// contains necessary info to use a sprite sheet for animation
+// expects sprite sheets to be laid out horizontally from left to right
 struct Animation {
     int firstFrameIndex;
     int lastFrameIndex;

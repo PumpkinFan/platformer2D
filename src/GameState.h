@@ -13,6 +13,7 @@
 
 #include "globals.h"
 #include "Player.h"
+#include "Level.h"
 #include "Editor.h"
 
 
@@ -33,7 +34,7 @@ struct GameState {
     // TODO: Figure out how to ignore this on Web
     void saveGameState(std::filesystem::path savePath);
     void loadGameState(std::filesystem::path loadPath);
-    
+    void loadLevel(Level level);
 };
 
 #endif // GAMESTATE_H

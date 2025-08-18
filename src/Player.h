@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "rlgl.h"
+
 #include "globals.h"
 #include "Animation.h"
 #include "Platform.h"
@@ -25,7 +26,7 @@ public:
     float height = 32.0;
     
     float horizontalAcceleration = 200.0;
-    float horizontalFriction = 200.0;
+    float horizontalFriction = 400.0;
     float maxHorizontalSpeed = 200.0;
 
     // increase player gravity when moving upward 

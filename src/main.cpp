@@ -6,6 +6,7 @@
 
 #include "globals.h"
 #include "GameState.h"
+#include "Level.h"
 
 
 #if defined(PLATFORM_WEB)
@@ -37,6 +38,11 @@ std::vector<Platform> createPlatforms() {
     return platforms;
 }
 
+unsigned int currentLevel = 1;
+std::vector<Level> levels = { 
+    Level { "gray plats", { 400, 225 }, "gamestate.bin" },
+    Level { "green plats", { 500, 50 }, "green_plats.bin" } 
+};
 
 GameState game;
 
@@ -54,16 +60,18 @@ int main(void)
     //--------------------------------------------------------------------------------------
     InitWindow(screenWidth, screenHeight, "platformer2D");
 
+    
     // Load player texture
     game.player.loadTexture();
-
+    
     // Initialize the camera
     game.camera.target = Vector2 { 0, 0 };
     game.camera.offset = Vector2 { 0, 0 };
     game.camera.rotation = 0.0f;
     game.camera.zoom = 1.0f;
-
-    game.platforms = createPlatforms();
+    
+    game.loadLevel(levels[currentLevel]);
+    // game.platforms = createPlatforms();
 
 
 #if defined(PLATFORM_WEB)
