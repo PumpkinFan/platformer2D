@@ -48,5 +48,5 @@ void GameState::loadGameState(std::filesystem::path loadPath) {
 void GameState::loadLevel(Level level) {
     loadGameState(level.startingGameStatePath);
     player.initialPosition = level.initialPlayerPosition;
-    player.position = level.initialPlayerPosition;
+    player.resetPosition();
 }

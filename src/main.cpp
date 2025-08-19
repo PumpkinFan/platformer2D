@@ -17,6 +17,7 @@
 // New editor features (specify exact values, align platforms, ...)
 // Pixel art - design player character, platforms, game objects, etc.
 // New game mechanics (coins, end goal)
+// Fix animation bug when player is moving left
 
 
 //----------------------------------------------------------------------------------
@@ -38,11 +39,14 @@ std::vector<Platform> createPlatforms() {
     return platforms;
 }
 
-unsigned int currentLevel = 1;
+unsigned int currentLevel = 0;
 std::vector<Level> levels = { 
     Level { "gray plats", { 400, 225 }, "gamestate.bin" },
     Level { "green plats", { 500, 50 }, "green_plats.bin" } 
 };
+// short duration before advancing to the next level
+float nextLevelTimer = 0;
+float nextLevelThreshold = 3.0;
 
 GameState game;
 
@@ -147,6 +151,15 @@ void UpdateDrawFrame(void)
     game.player.checkCollisionWithGoal(&game.goal);
     game.player.updatePosition();
     game.player.updateAnimation();    
+
+    if (game.player.reachedGoal && (nextLevelTimer < nextLevelThreshold)) {
+        nextLevelTimer += GetFrameTime();
+        if (nextLevelTimer >= nextLevelThreshold && currentLevel < levels.size() - 1) {
+            currentLevel += 1;
+            game.loadLevel(levels[currentLevel]);
+            nextLevelTimer = 0;
+        }
+    }
     
     // Editor stuff
     //----------------------------------------------------------------------------------
@@ -206,6 +219,5 @@ void UpdateDrawFrame(void)
     if (game.editor.loadingGameState) {
         game.loadGameState(game.editor.readLoadPath());
     }
-
 
 }

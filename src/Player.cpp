@@ -20,6 +20,15 @@ void Player::draw() {
     }
 }
 
+void Player::resetPosition() {
+    position = initialPosition;
+    velocity = { 0.0, 0.0 };
+    onPlatform = nullptr;
+    touchingWallLeft = nullptr;
+    touchingWallRight = nullptr;
+    reachedGoal = nullptr;
+}
+
 void Player::handleUserInput() {
     // walk left
     if (IsKeyDown(KEY_A) && velocity.x > -maxHorizontalSpeed && !touchingWallLeft) {
@@ -70,12 +79,7 @@ void Player::handleUserInput() {
 
     // reset position
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_LEFT_ALT) && IsKeyPressed(KEY_R)) {
-        position = initialPosition;
-        velocity = { 0.0, 0.0 };
-        onPlatform = nullptr;
-        touchingWallLeft = nullptr;
-        touchingWallRight = nullptr;
-        reachedGoal = nullptr;
+        resetPosition();
     }
 }
 

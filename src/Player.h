@@ -61,6 +61,7 @@ public:
     void checkSlidingOffWallLeft();
     void checkSlidingOffWallRight();
     void checkCollisionWithGoal(Goal *goal);
+    void resetPosition();
     
 
     template<class Archive>
