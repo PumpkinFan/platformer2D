@@ -39,14 +39,16 @@ std::vector<Platform> createPlatforms() {
     return platforms;
 }
 
+// start on first level, incremented whenever player reaches goal
 unsigned int currentLevel = 0;
 std::vector<Level> levels = { 
-    Level { "gray plats", { 400, 225 }, "gamestate.bin" },
-    Level { "green plats", { 500, 50 }, "green_plats.bin" } 
+    Level { "gray plats", { 400, 225 }, "levels/gray_plats.bin" },
+    Level { "green plats", { 500, 50 }, "levels/green_plats.bin" } 
 };
-// short duration before advancing to the next level
+// keep track of the amount of time since reaching the goal
 float nextLevelTimer = 0;
-float nextLevelThreshold = 3.0;
+// wait this amount of time before advancing the level after player reaches goal
+float nextLevelThreshold = 2.0;
 
 GameState game;
 

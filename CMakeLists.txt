@@ -44,13 +44,14 @@ add_subdirectory(src)
 # Include raygui header
 target_include_directories(${PROJECT_NAME} PRIVATE ${raygui_SOURCE_DIR}/src)
 
-# Link raylib
+# Link raylib and cereal
 target_link_libraries(${PROJECT_NAME} raylib cereal)
 
 # Web Configurations
 if ("${PLATFORM}" STREQUAL "Web")
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
     target_link_options(${PROJECT_NAME} PUBLIC -sUSE_GLFW=3)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --preload-file ${CMAKE_SOURCE_DIR}/levels@/levels")
 endif()
 
 # MacOS Framework Linking

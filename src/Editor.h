@@ -34,7 +34,7 @@ class Editor {
 private:
     float buttonSize = 30;
     float buttonPadding = 10;
-    Vector2 buttonsStart = { 30, 30 };
+    Vector2 buttonsStart = { 30, 30 };  // top left corner of button array
     std::vector<EditorButton> generateButtons();  
     std::vector<EditorButton> buttons = generateButtons();
     
@@ -71,8 +71,8 @@ public:
     void handleUserInput();
     void draw();
     
-    // set the temporary file paths to something useful on construction
     Editor() {
+        // set the temporary file paths to something useful on construction
         dummyFilePath.copy(tempSavePath, dummyFilePath.length());
         tempSavePath[dummyFilePath.length() + 1] = '\0';  // null termination
         dummyFilePath.copy(tempLoadPath, dummyFilePath.length());

@@ -9,7 +9,7 @@
 #include "Player.h"
 #include "Platform.h"
 
-// contains level information such as level index/label, player start position,
+// contains level information such as level label, player start position,
 // and path to load starting gamestate
 struct Level
 {
@@ -18,4 +18,4 @@ struct Level
     std::filesystem::path startingGameStatePath;
 };
 
-#endif
+#endif // LEVEL_H
