@@ -51,7 +51,11 @@ target_link_libraries(${PROJECT_NAME} raylib cereal)
 if ("${PLATFORM}" STREQUAL "Web")
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
     target_link_options(${PROJECT_NAME} PUBLIC -sUSE_GLFW=3)
+    
+    # add local files to emscripten virtual filesystem
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --preload-file ${CMAKE_SOURCE_DIR}/levels@/levels")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --preload-file ${CMAKE_SOURCE_DIR}/assets@/assets")
+
 endif()
 
 # MacOS Framework Linking
