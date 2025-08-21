@@ -24,20 +24,21 @@
 // Global Game State
 //----------------------------------------------------------------------------------
 
-std::vector<Platform> createPlatforms() {
-    std::vector<Platform> platforms;
-    Platform platform1 = { Rectangle { 150, 400, 500, 50 } };
-    Platform platform2 = { Rectangle { 300, 300, 100, 10 } };
-    Platform platform3 = { Rectangle { 375, 350, 100, 10 } };
-    Platform verticalPlatformLeft = { Rectangle { 100, 100, 50, 300 } };
-    Platform verticalPlatformRight = { Rectangle { 650, 100, 50, 300 } };
-    platforms.push_back(platform1);
-    platforms.push_back(platform2);
-    platforms.push_back(platform3);
-    platforms.push_back(verticalPlatformLeft);
-    platforms.push_back(verticalPlatformRight);
-    return platforms;
-}
+// Create some platforms in memory
+// std::vector<Platform> createPlatforms() {
+//     std::vector<Platform> platforms;
+//     Platform platform1 = { Rectangle { 150, 400, 500, 50 } };
+//     Platform platform2 = { Rectangle { 300, 300, 100, 10 } };
+//     Platform platform3 = { Rectangle { 375, 350, 100, 10 } };
+//     Platform verticalPlatformLeft = { Rectangle { 100, 100, 50, 300 } };
+//     Platform verticalPlatformRight = { Rectangle { 650, 100, 50, 300 } };
+//     platforms.push_back(platform1);
+//     platforms.push_back(platform2);
+//     platforms.push_back(platform3);
+//     platforms.push_back(verticalPlatformLeft);
+//     platforms.push_back(verticalPlatformRight);
+//     return platforms;
+// }
 
 // start on first level, incremented whenever player reaches goal
 unsigned int currentLevel = 0;

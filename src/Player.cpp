@@ -6,13 +6,25 @@ void Player::draw() {
     if (IsKeyDown(KEY_A)) {
         Rectangle currentFrame = runningAnimation.getCurrentFrame();
         currentFrame.width = currentFrame.width * -1.0f;
-        DrawTexturePro(runningTexture, currentFrame, Rectangle { position.x, position.y, runningAnimation.frameWidth, runningAnimation.frameHeight },
-        Vector2 { 0.0, 0.0 }, 0.0, WHITE);
+        DrawTexturePro(
+            runningTexture, 
+            currentFrame, 
+            Rectangle { position.x, position.y, runningAnimation.frameWidth, runningAnimation.frameHeight }, 
+            Vector2 { 0.0, 0.0 }, 
+            0.0, 
+            WHITE
+        );
     }
     // running to the right
     else if (IsKeyDown(KEY_D)) {
-        DrawTexturePro(runningTexture, runningAnimation.getCurrentFrame(), Rectangle { position.x, position.y, runningAnimation.frameWidth, runningAnimation.frameHeight },
-        Vector2 { 0.0, 0.0 }, 0.0, WHITE);
+        DrawTexturePro(
+            runningTexture, 
+            runningAnimation.getCurrentFrame(), 
+            Rectangle { position.x, position.y, runningAnimation.frameWidth, runningAnimation.frameHeight },
+            Vector2 { 0.0, 0.0 }, 
+            0.0, 
+            WHITE
+        );
     }
     // idle
     else {
