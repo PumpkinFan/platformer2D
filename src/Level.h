@@ -9,6 +9,8 @@
 #include "Player.h"
 #include "Platform.h"
 
+// TODO: Add goal information
+
 // contains level information such as level label, player start position,
 // and path to load starting gamestate
 struct Level

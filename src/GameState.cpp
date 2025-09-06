@@ -18,7 +18,7 @@ void GameState::displayDebugInformation() {
     debugInformation << "TOUCHING WALL R " << (bool)(player.touchingWallRight) << "\n";
     debugInformation << "REACHED GOAL " << (bool)(player.reachedGoal) << "\n";
 
-    DrawText(debugInformation.str().c_str(), screenWidth - 150, 50, 0, LIME);
+    DrawText(debugInformation.str().c_str(), screenWidth - 250, 50, 20, LIME);
 }
 
 void GameState::saveGameState(std::filesystem::path savePath) {
