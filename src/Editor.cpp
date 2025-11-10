@@ -1,4 +1,6 @@
 #include "Editor.h"
+#include <iostream>
+#include <cstdio>
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
@@ -72,7 +74,7 @@ void Editor::setMode(EditorMode newMode) {
     }
     if (newMode != SELECT_PLATFORM) {
         // forget the selected platform if we switch off SELECT_PLATFORM
-        selectedPlatform = nullptr;
+        selectedObject = nullptr;
     }
     mode = newMode;
 }
@@ -95,15 +97,24 @@ void Editor::handleUserInput() {
 
     if (mode == SELECT_PLATFORM) {
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            searchingForSelectedPlatform = true;
+            searchingForSelectedObject = true;
         }
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && (selectedPlatform != nullptr)) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && (selectedObject != nullptr)) {
             Vector2 mouseDelta = GetMouseDelta();
-            selectedPlatform->rectangle.x += mouseDelta.x;
-            selectedPlatform->rectangle.y += mouseDelta.y;
+            Rectangle rect = selectedObject->getRect();
+            rect.x += mouseDelta.x;
+            rect.y += mouseDelta.y;
+            selectedObject->setRect(rect);
         }
+        if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && (selectedObject != nullptr)) {
+            if (CheckCollisionPointRec(GetMousePosition(), selectedObject->getRect())) {
+                contextMenuPosition = GetMousePosition();
+                setMode(CONTEXT_MENU);
+            }
+        }
+
         if (IsKeyPressed(KEY_GRAVE)) {  // Detect '~' key on U.S. layout
-            selectedPlatform = nullptr;
+            selectedObject = nullptr;
         }
     }
 
@@ -186,8 +197,33 @@ void Editor::draw() {
         DrawRectangleRec(previewRectangle, drawPlatformColor);
     }
 
-    if (mode == SELECT_PLATFORM && (selectedPlatform != nullptr)) {
-        DrawRectangleLinesEx(selectedPlatform->rectangle, selectedLineThickness, SKYBLUE);
+    if (mode == SELECT_PLATFORM && (selectedObject != nullptr)) {
+        DrawRectangleLinesEx(selectedObject->getRect(), selectedLineThickness, LIME);
+    }
+
+    if (mode == CONTEXT_MENU) {
+        int result = GuiListViewEx(Rectangle{ contextMenuPosition.x, contextMenuPosition.y, 100, 50 },
+                                    contextMenuItems,
+                                    2,
+                                    &contextMenuFocus,
+                                    &contextMenuScrollIndex,
+                                    &contextMenuItemSelected);
+
+        if (result != -1) {
+            contextMenuItemSelected = result;
+            if (contextMenuItemSelected == 0) { // Set Exact Value
+                setMode(SET_EXACT_VALUES);
+                Rectangle rect = selectedObject->getRect();
+                snprintf(exactX, 10, "%f", rect.x);
+                snprintf(exactY, 10, "%f", rect.y);
+                snprintf(exactWidth, 10, "%f", rect.width);
+                snprintf(exactHeight, 10, "%f", rect.height);
+            }
+            else if (contextMenuItemSelected == 1) { // Change Color
+                // TODO: Implement change color functionality
+            }
+            contextMenuItemSelected = -1;
+        }
     }
 
 }

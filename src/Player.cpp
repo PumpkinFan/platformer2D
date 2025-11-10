@@ -193,6 +193,17 @@ void Player::checkCollisionWithGoal(Goal *goal) {
     }
 }
 
-Rectangle Player::getPlayerRectangle() {
+Rectangle Player::getPlayerRectangle() const {
     return Rectangle { position.x, position.y, width, height };
+}
+
+Rectangle Player::getRect() const {
+    return getPlayerRectangle();
+}
+
+void Player::setRect(Rectangle rect) {
+    position.x = rect.x;
+    position.y = rect.y;
+    width = rect.width;
+    height = rect.height;
 }

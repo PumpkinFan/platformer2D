@@ -2,11 +2,20 @@
 #define PLATFORM_H
 
 #include "raylib.h"
+#include "GameObject.h"
 
-struct Platform {
+struct Platform : public GameObject {
     Rectangle rectangle;
     Color color = GRAY;
     void draw();
+
+    Rectangle getRect() const override {
+        return rectangle;
+    }
+
+    void setRect(Rectangle rect) override {
+        rectangle = rect;
+    }
 
     template<class Archive>
     void serialize(Archive& archive) {

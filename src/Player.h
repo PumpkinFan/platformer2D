@@ -10,7 +10,9 @@
 #include "Platform.h"
 #include "Goal.h"
 
-struct Player {
+#include "GameObject.h"
+
+struct Player : public GameObject {
 private:
     const char *idleTextureFilePath = "assets/stickman32-idle.png";
     const char *runningTextureFilePath = "assets/stickman32-running.png";
@@ -49,7 +51,10 @@ public:
     Goal *reachedGoal = nullptr;
 
     // could be used for collision detection
-    Rectangle getPlayerRectangle();
+        Rectangle getPlayerRectangle() const;
+
+    Rectangle getRect() const override;
+    void setRect(Rectangle rect) override;
 
     void draw();
     void handleUserInput();

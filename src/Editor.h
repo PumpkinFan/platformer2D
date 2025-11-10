@@ -5,6 +5,7 @@
 #include "raymath.h"
 
 #include "Platform.h"
+#include "GameObject.h"
 
 #include <vector>
 #include <functional>
@@ -17,7 +18,9 @@ enum EditorMode {
     DRAW_PLATFORM,
     SELECT_PLATFORM,
     ENTER_SAVE_PATH,
-    ENTER_LOAD_PATH
+    ENTER_LOAD_PATH,
+    CONTEXT_MENU,
+    SET_EXACT_VALUES
 };
 
 // Custom button struct. `onClick` triggers when button is left-clicked.
@@ -59,9 +62,21 @@ public:
     Platform createDrawnPlatform();
     bool finishedDrawingPlatform = false; 
     
-    bool searchingForSelectedPlatform = false;
-    Platform* selectedPlatform = nullptr;
+    bool searchingForSelectedObject = false;
+    GameObject* selectedObject = nullptr;
+    Vector2 contextMenuPosition;
     float selectedLineThickness = 2.0f;
+
+    const char* contextMenuItems[2] = { "Set Exact Value", "Change Color" };
+    int contextMenuItemSelected = -1;
+    int contextMenuScrollIndex = 0;
+    int contextMenuFocus = -1;
+
+    char exactX[10];
+    char exactY[10];
+    char exactWidth[10];
+    char exactHeight[10];
+    bool editingExactValues = false;
 
     bool savingGameState = false;
     bool loadingGameState = false;

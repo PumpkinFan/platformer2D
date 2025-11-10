@@ -175,14 +175,26 @@ void UpdateDrawFrame(void)
             game.addNewPlatform(game.editor.createDrawnPlatform());
             game.editor.finishedDrawingPlatform = false;
         } 
-        if (game.editor.searchingForSelectedPlatform) {
+        if (game.editor.searchingForSelectedObject) {
             for (Platform& platform : game.platforms) {
-                if (CheckCollisionPointRec(GetMousePosition(), platform.rectangle)) {
-                    game.editor.selectedPlatform = &platform;
-                    game.editor.searchingForSelectedPlatform = false;
+                if (CheckCollisionPointRec(GetMousePosition(), platform.getRect())) {
+                    game.editor.selectedObject = &platform;
                     break;
                 }
             }
+            if (game.editor.selectedObject == nullptr) {
+                if (CheckCollisionPointRec(GetMousePosition(), game.player.getRect())) {
+                    game.editor.selectedObject = &game.player;
+                }
+            }
+
+            // If no platform was selected, check for the goal
+            if (game.editor.selectedObject == nullptr) {
+                if (CheckCollisionPointRec(GetMousePosition(), game.goal.getRect())) {
+                    game.editor.selectedObject = &game.goal;
+                }
+            }
+            game.editor.searchingForSelectedObject = false;
         }
     }
 

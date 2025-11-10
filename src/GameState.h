@@ -23,7 +23,24 @@ struct GameState {
     Editor editor;
     std::vector<Platform> platforms;
     void addNewPlatform(Platform newPlatform) {
+        Rectangle oldPlatformRect;
+        if (player.onPlatform) {
+            oldPlatformRect = player.onPlatform->getRect();
+        }
+
         platforms.push_back(newPlatform);
+
+        if (player.onPlatform) {
+            for (Platform& p : platforms) {
+                if (p.getRect().x == oldPlatformRect.x &&
+                    p.getRect().y == oldPlatformRect.y &&
+                    p.getRect().width == oldPlatformRect.width &&
+                    p.getRect().height == oldPlatformRect.height) {
+                    player.onPlatform = &p;
+                    break;
+                }
+            }
+        }
     };
     Goal goal;
 
